@@ -1,0 +1,230 @@
+<html>
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <style>
+        body {
+            background-color: var(--bs-dark);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: #fff;
+        }
+        
+        .page-wrapper {
+            height: 95%;
+        }
+
+        .popup-wrapper {
+            position: fixed;
+            top: 0;
+            z-index: 10;
+            display: none;
+        }
+
+        .popup-wrapper > .row {
+            background-color: var(--bs-dark);
+        }
+
+        .page-wrapper>.row {
+            height: inherit;
+        }
+
+        .row-cols-3>.col-sm-6 {
+            margin: auto 0;
+        }
+
+        .block-wrapper {
+            margin-bottom: 2rem;
+        }
+
+        .block-header,
+        .block-content {
+            margin-bottom: 1rem;
+        }
+
+        .block-content input {
+            font-family: 'Source Code Pro', monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper container-sm">
+        <div class="row row-cols-3 mt-4">
+            <div class="col-sm-3">
+
+            </div>
+            <div class="col-sm-6">
+                <div class="download-wrapper block-wrapper">
+                    <div class="download-header block-header">
+                        <h4>Filename:</h4>
+                    </div>
+                    <div class="download-content block-content">
+                        <input type="text" class="form-control" disabled></input>
+                    </div>
+                    <div class="download-button block-button">
+                        <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-group me-2" role="group">
+                                <a href="" class="download-link">
+                                    <button type="submit" class="btn btn-primary">Download</button>
+                                </a>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <button type="submit" class="btn btn-secondary">Copy filename</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+
+            </div>
+        </div>
+    </div>
+    <div class="popup-wrapper container-sm">
+        <div class="row row-cols-3 mt-4">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <div class="popup-container">
+                    <div class="popup-header">
+                        
+                    </div>
+                    <div class="popup-form">
+                        <div class="form-group">
+                            <div class="popup-form-username block-content">
+                                <h4>Username</h4>
+                                <input type="text" class="form-control" id="input-username" aria-label="Username">
+                            </div>
+                            <div class="popup-form-password block-content">
+                                <h4>Password</h4>
+                                <input type="password" class="form-control" id="input-password" aria-label="Password">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
+</body>
+<footer>
+    <script>
+        jQuery(document).ready(function ($) {
+            
+            (function() {
+
+                if ( !findHashInUrl( window.location.href ) ) {
+
+                    const window_height = window.innerHeight;
+                    const window_width = window.innerWidth;
+                    const popup_height = $( '.popup-wrapper' ).height();
+                    const popup_width = $( '.popup-wrapper' ).width();
+
+                    $( '.popup-wrapper' ).css({
+                        'display': 'block'
+                    });
+                    
+                    $( '.popup-wrapper > .row' ).css({
+                        'left': ( window_width - popup_width ) / 2,
+                        'top': ( window_height - popup_height ) / 2,
+                        'height': window_height,
+                        'width': window_width
+                    });
+
+                    $( '.popup-wrapper > .row > .col-sm-4:nth-of-type(2)' ).css({
+                        'margin-top': ( window_height - popup_height ) / 2,
+                    });
+
+                    $( '.popup-form button' ).on('click', function() {
+
+                        $.ajax({
+                            url: '/api/v1/downloads',
+                            type: 'POST',
+                            data: {
+                                username: $( '#input-username' ).val(),
+                                password: $( '#input-password' ).val()
+                            },
+                            success: function (res) {
+                                // console.log(res);
+                                $( '.popup-wrapper' ).css({
+                                    'display': 'none'
+                                });
+                                getDownloads(res);
+                            }
+                        });
+
+                    });
+
+                }
+
+            })();
+            
+            function printFilename(arg_filename) {
+                if ( $( '.download-wrapper:first-of-type .download-content > input' ).val() !== '' ) {
+                    $( '.download-wrapper:last-of-type' ).clone().appendTo( '.page-wrapper .col-sm-6' );
+                }
+
+                $( '.download-wrapper:last-of-type .download-content > input' ).val( arg_filename );
+            }
+
+            function printUrl(arg_url) {
+                $( '.download-wrapper:last-of-type .download-button a.download-link' ).attr('href', arg_url);
+
+                $( ' .download-button button.btn-secondary ' ).on('click', function () {
+                    let copy_text = $( this ).parents( '.download-wrapper' ).find( 'input' ).val();
+                    navigator.clipboard.writeText(copy_text);
+                });
+            }
+
+            function getDownloads(res) {
+                // console.log(res);
+                for ( const response_object of res ) {
+                    const hash = response_object.hash;
+                    for ( const download_object of response_object.filenames ) {
+                        printFilename(download_object.filename);
+                        printUrl('/download/' + hash + '/file/' + download_object.filename);
+                    }
+                }
+            }
+
+            function findHashInUrl(url) {
+                const splitUrl = url.split('/');
+                const regex = /[\d\w]{32}/;
+
+                for ( const elem of splitUrl ) {
+                    if ( elem.match( regex ) ) {
+                        return elem
+                    }
+                }
+
+                return false;
+            }
+
+            if ( findHashInUrl( window.location.href ) ) {
+
+                $.ajax({
+                    url: '/api/v1/download/' + findHashInUrl( window.location.href ),
+                    type: 'GET',
+                    success: function (res) {
+                        getDownloads(res);
+                    }
+                });
+
+            }
+
+        });
+    </script>
+</footer>
+
+</html>

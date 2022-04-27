@@ -1,0 +1,7 @@
+.gitignore
+.env
+docs.txt
+package-lock.json
+Untitled-*.json
+node_modules/
+passgen/

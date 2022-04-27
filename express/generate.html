@@ -1,0 +1,237 @@
+<html>
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <style>
+        .load-wrapper {
+            position: fixed;
+            z-index: 999;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(230 230 230 / 50%);
+        }
+
+        .load-wrapper img {
+            width: 128px;
+            height: 128px;
+        }
+
+        .page-wrapper {
+            height: 100%;
+        }
+
+        .page-wrapper>.row {
+            height: inherit;
+        }
+
+        .block-wrapper {
+            margin-bottom: 2rem;
+        }
+
+        .block-header,
+        .block-content {
+            margin-bottom: 1rem;
+        }
+
+        .block-content input {
+            font-family: 'Source Code Pro', monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="load-wrapper">
+        <img src="data:image/png;base64,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" alt="">
+    </div>
+    <div class="page-wrapper container-sm">
+        <div class="row row-cols-3 align-items-center">
+            <div class="col-sm-3">
+
+            </div>
+            <div class="col-sm-6">
+                <div class="username-wrapper block-wrapper">
+                    <div class="username-header block-header">
+                        <h2>Your username:</h2>
+                    </div>
+                    <div class="username-content block-content">
+                        <input type="text" class="form-control" disabled></input>
+                    </div>
+                    <div class="username-button block-button">
+                        <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-group me-2" role="group">
+                                <button type="submit" class="btn btn-primary">Generate</button>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <button type="submit" class="btn btn-secondary">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="password-wrapper block-wrapper">
+                    <div class="password-header block-header">
+                        <h2>Your password:</h2>
+                    </div>
+                    <div class="password-content block-content">
+                        <input type="text" class="form-control" disabled></input>
+                    </div>
+                    <div class="password-button block-button">
+                        <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-group me-2" role="group">
+                                <button type="submit" class="btn btn-primary">Generate</button>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <button type="submit" class="btn btn-secondary">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="email-wrapper block-wrapper">
+                    <div class="email-header block-header">
+                        <h2>Your email:</h2>
+                    </div>
+                    <div class="email-content block-content">
+                        <input type="text" class="form-control" disabled></input>
+                    </div>
+                    <div class="email-button block-button">
+                        <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-group me-2" role="group">
+                                <button type="submit" class="btn btn-primary">Generate</button>
+                            </div>
+                            <div class="btn-group me-2" role="group">
+                                <button type="submit" class="btn btn-secondary">Copy</button>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <a href="" class="email-link" target="_blank">
+                                    <button type="submit" class="btn btn-success">Open inbox</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+
+            </div>
+        </div>
+    </div>
+</body>
+<footer>
+    <script>
+        jQuery(document).ready(function ($) {
+            function printUsername(arg_username) {
+                $(' .username-content > input ').val(arg_username.charAt(0).toUpperCase() + arg_username.slice(1));
+            }
+
+            function printPassword(arg_password) {
+                $(' .password-content > input ').val(arg_password);
+            }
+
+            function printEmail(arg_email) {
+                // console.log(arg_email);
+                $(' .email-content > input ').val(arg_email.email);
+                $(' .email-button a.email-link ').attr('href', 'https://app.mailslurp.com/inboxes/' + arg_email.id);
+            }
+
+            const loadWrapper = setInterval(function() {
+                $( {deg: 0} ).animate( {deg: 360}, {
+                    duration: 1500,
+                    step: function(now) {
+                        $( '.load-wrapper img' ).css({
+                            transform: 'rotate(' + now + 'deg)'
+                        });
+                    }
+                } );
+                console.log(1);
+            }, 2000);
+            
+            $(' .username-button button.btn-primary ').on('click', function () {
+                $.ajax({
+                    url: '/generate/username',
+                    type: 'GET',
+                    success: function (res) {
+                        printUsername(res);
+                    }
+                })
+            });
+
+            $( ' .username-button button.btn-secondary ' ).on('click', function () {
+                let copy_text = $( ' .username-content > input ' ).val();
+                navigator.clipboard.writeText(copy_text);
+            })
+
+            $(' .password-button button.btn-primary ').on('click', function () {
+                $.ajax({
+                    url: '/generate/password',
+                    type: 'GET',
+                    success: function (res) {
+                        printPassword(res);
+                    }
+                })
+            });
+
+            $( ' .password-button button.btn-secondary ' ).on('click', function () {
+                let copy_text = $( ' .password-content > input ' ).val();
+                navigator.clipboard.writeText(copy_text);
+            })
+
+            $(' .email-button button.btn-primary ').on('click', function () {
+                $.ajax({
+                    url: '/generate/email',
+                    type: 'GET',
+                    success: function (res) {
+                        printEmail(res);
+                    }
+                })
+            });
+
+            $( ' .email-button button.btn-secondary ' ).on('click', function () {
+                let copy_text = $( ' .email-content > input ' ).val();
+                navigator.clipboard.writeText(copy_text);
+            })
+
+            $.ajax({
+                url: '/generate/username',
+                type: 'GET',
+                success: function (res) {
+                    printUsername(res);
+                }
+            });
+
+            $.ajax({
+                url: '/generate/password',
+                type: 'GET',
+                success: function (res) {
+                    printPassword(res);
+                }
+            });
+
+            $.ajax({
+                url: '/generate/email',
+                type: 'GET',
+                success: function (res) {
+                    printEmail(res);
+                }
+            });
+
+            $( document ).ajaxStop( function() {
+                $( '.load-wrapper' ).hide();
+                clearInterval(loadWrapper);
+            });
+
+        });
+    </script>
+</footer>
+
+</html>
